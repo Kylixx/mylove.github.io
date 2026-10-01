@@ -1,0 +1,183 @@
+:root{
+  --persp:900px;
+  --rose:#ff9fb6;
+  --peach:#ffd3b8;
+  --gold:#f2c98a;
+  --thread:#ff4d6d;
+  --ink:#fdf1f3;
+  --muted:#c8b8d8;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --script:'Marck Script','Cormorant Garamond',cursive;
+  --jp:'Noto Serif JP','Hiragino Mincho ProN','Yu Mincho',serif;
+  /* меняются из script.js по мере движения по тоннелю */
+  --c-edge:8 5 20;
+  --c-center:38 20 66;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:rgb(8 5 20)}
+body{
+  color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+body.locked{overflow:hidden;height:100vh}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+
+/* ---------- Фон и слои ---------- */
+#bg{position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 50%,rgb(var(--c-center)) 0%,rgb(var(--c-edge)) 78%)}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#vignette{position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 45%,rgba(5,3,12,.62) 100%)}
+#stage{position:fixed;inset:0;z-index:3;perspective:var(--persp);overflow:hidden;pointer-events:none}
+#world{position:absolute;inset:0;transform-style:preserve-3d}
+#track{width:1px;pointer-events:none}
+
+/* ---------- Сцена — «остановка» в тоннеле ---------- */
+.scene{
+  position:absolute;left:50%;top:50%;
+  visibility:hidden;opacity:0;text-align:center;
+  backface-visibility:hidden;will-change:transform,opacity;
+}
+.scene.on{pointer-events:auto}
+
+/* Заглавная сцена */
+.hero{width:min(780px,90vw)}
+.hero h1{font-weight:300;line-height:.95}
+.hero .h1a{display:block;font-family:var(--serif);font-size:clamp(46px,11vw,112px);color:var(--ink);letter-spacing:-.01em}
+.hero .h1b{
+  display:block;font-family:var(--script);font-weight:400;
+  font-size:clamp(54px,15vw,148px);line-height:1.1;margin-top:.04em;
+  background:linear-gradient(100deg,var(--rose),var(--peach) 60%,var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 28px rgba(255,140,170,.35));
+}
+.hero .sub{max-width:27em;margin:1.4rem auto 0;color:var(--muted);font-size:clamp(14px,3.6vw,17px);font-weight:300}
+.hint{margin-top:2.2rem;color:var(--muted);font-size:.85rem;font-weight:300}
+.hint i{display:block;width:1px;height:40px;margin:0 auto .6rem;background:linear-gradient(var(--rose),transparent);animation:drip 2.2s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* Стихи */
+.poem{width:min(640px,88vw);--fs:clamp(21px,4.9vw,34px)}
+.poem .ttl{font-size:13px;font-weight:400;color:var(--rose);margin-bottom:1.1rem;letter-spacing:.02em}
+.poem .orn{display:block;width:1px;height:34px;margin:0 auto 1rem;background:linear-gradient(transparent,var(--rose))}
+.poem .st{margin-bottom:1.1em}
+.poem .ln{
+  font-family:var(--serif);font-style:italic;font-weight:300;font-size:var(--fs);line-height:1.36;
+  color:var(--ink);text-shadow:0 0 34px rgba(255,150,180,.3);
+}
+.poem.mine .ln{font-family:var(--script);font-style:normal}
+.poem .by{font-family:var(--script);font-size:calc(var(--fs) * .78);color:var(--peach);margin-top:.5em;line-height:1.2}
+.poem .by small{display:block;font-family:var(--sans);font-style:normal;font-size:12px;color:var(--muted);margin-top:.3rem}
+
+/* Фото в арках по стенам тоннеля */
+.photo{--pw:clamp(168px,47vw,300px);width:var(--pw);cursor:zoom-in}
+.photo .arch{
+  padding:6px;border-radius:999px 999px 22px 22px;
+  background:linear-gradient(165deg,rgba(255,159,182,.95),rgba(255,211,184,.45) 52%,rgba(255,159,182,.3));
+  box-shadow:0 0 70px rgba(255,110,160,.3),0 34px 60px rgba(0,0,0,.5);
+}
+.photo .pic{aspect-ratio:4/5;border-radius:999px 999px 17px 17px;overflow:hidden;background:linear-gradient(160deg,#4a2a6e,#b05c76);display:grid;place-items:center}
+.photo .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.photo .ph{font-size:2.6rem;color:rgba(255,255,255,.55)}
+.photo figcaption{font-family:var(--script);color:var(--peach);font-size:clamp(16px,4vw,20px);margin-top:.9rem;line-height:1.25}
+
+/* Японские фразы */
+.jp{width:min(680px,88vw)}
+.jp .ja{
+  font-family:var(--jp);font-weight:200;line-height:1.28;color:#fff;
+  font-size:clamp(32px,8.4vw,78px);text-shadow:0 0 44px rgba(255,150,180,.5);
+}
+.jp .ro{font-style:italic;color:var(--muted);font-size:clamp(13px,3.4vw,16px);margin-top:.8rem;font-weight:300}
+.jp .ru{font-family:var(--serif);font-style:italic;font-size:clamp(21px,5vw,30px);margin-top:.9rem;line-height:1.3}
+.jp .note{font-size:clamp(12.5px,3.2vw,14.5px);color:var(--muted);margin:.8rem auto 0;max-width:30em;font-weight:300}
+
+/* Счётчик */
+.cnt .t{font-family:var(--serif);font-style:italic;font-size:clamp(20px,5vw,28px);color:var(--muted);font-weight:300}
+.cnt .num{
+  font-family:var(--script);font-size:clamp(96px,30vw,230px);line-height:1.05;
+  background:linear-gradient(120deg,var(--rose),var(--peach));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 36px rgba(255,120,160,.4));
+}
+.cnt .detail{margin-top:.8rem;color:var(--muted);font-size:clamp(13px,3.4vw,16px);font-weight:300}
+
+/* Причины */
+.rs{width:min(900px,92vw)}
+.rs h2,.skyS h2{font-family:var(--serif);font-weight:300;font-size:clamp(28px,6.4vw,46px);line-height:1.15}
+.rs .sub,.skyS .sub{color:var(--muted);font-size:clamp(13px,3.4vw,15px);font-weight:300;margin:.5rem auto 1.4rem;max-width:30em}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media (min-width:760px){.cards{grid-template-columns:repeat(3,1fr);gap:14px}}
+.rc{perspective:700px;height:clamp(104px,15vh,140px)}
+.rc .inner{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.rc.flip .inner{transform:rotateY(180deg)}
+.rc .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:.9rem;border-radius:18px;backface-visibility:hidden;text-align:center}
+.rc .front{border:1px solid rgba(255,255,255,.2);background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));font-size:1.8rem;color:var(--thread);text-shadow:0 0 16px rgba(255,77,109,.6)}
+.rc .back{transform:rotateY(180deg);background:linear-gradient(160deg,#ffe7dc,#ffc9d6);color:#4a2440;font-family:var(--script);font-size:clamp(14px,3.6vw,18px);line-height:1.3}
+
+/* Небо */
+.skyS{width:min(660px,92vw)}
+#skyc{display:block;width:100%;height:clamp(180px,34vh,300px);border-radius:24px;cursor:crosshair;touch-action:manipulation;
+  border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg,rgba(10,6,24,.55),rgba(60,24,70,.4))}
+
+/* Письмо */
+.letter{width:min(620px,90vw);--fs:clamp(18px,4.5vw,26px)}
+.paper{
+  text-align:left;padding:clamp(1.2rem,4vw,2.2rem);border-radius:26px;
+  background:linear-gradient(160deg,rgba(30,12,44,.78),rgba(22,8,34,.66));
+  border:1px solid rgba(255,255,255,.22);box-shadow:0 30px 80px rgba(0,0,0,.5);
+  font-family:var(--script);font-size:var(--fs);line-height:1.45;color:#fff4ef;white-space:pre-wrap;
+}
+.paper .caret{display:inline-block;width:2px;height:1em;background:var(--rose);vertical-align:-.12em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.heart-btn{margin-top:1.2rem;font-size:clamp(38px,9vw,52px);line-height:1;color:var(--thread);animation:beat 1.8s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(255,77,109,.7))}
+.heart-hint{color:#fff;font-size:.9rem;font-weight:400;text-shadow:0 1px 14px rgba(40,10,40,.8)}
+@keyframes beat{0%,100%{scale:1}15%{scale:1.13}30%{scale:1}45%{scale:1.08}}
+
+/* ---------- Нить прогресса ---------- */
+#progress{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));width:min(460px,64vw);height:2px;translate:-50% 0;
+  background:rgba(255,255,255,.14);border-radius:2px;z-index:6;opacity:0;transition:opacity 1.4s ease .6s;pointer-events:none}
+body.opened #progress{opacity:1}
+#progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff4d6d,#ff9fb6);border-radius:2px;box-shadow:0 0 10px rgba(255,77,109,.7)}
+#progress b{position:absolute;top:50%;left:0;font-size:15px;line-height:1;color:var(--thread);transform:translate(-50%,-50%);text-shadow:0 0 10px var(--thread)}
+
+/* ---------- Вход ---------- */
+#intro{
+  position:fixed;inset:0;z-index:20;display:grid;place-items:center;text-align:center;padding:1.5rem;
+  background:radial-gradient(ellipse at 50% 45%,rgba(10,6,22,.35),rgba(6,3,14,.88));
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  transition:opacity 1.5s ease,transform 1.7s cubic-bezier(.5,0,.2,1),filter 1.5s ease,visibility 1.7s;
+}
+#intro.go{opacity:0;transform:scale(1.9);filter:blur(14px);visibility:hidden;pointer-events:none}
+.intro-in h1{font-family:var(--serif);font-weight:300;font-size:clamp(52px,14vw,120px);line-height:1;
+  background:linear-gradient(100deg,#fff,var(--peach) 55%,var(--rose));-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro-in p{max-width:24em;margin:1.2rem auto 2.4rem;color:var(--muted);font-weight:300;font-size:clamp(14px,3.8vw,17px)}
+.enter{
+  position:relative;display:inline-flex;align-items:center;gap:.7rem;padding:.95rem 2.1rem;border-radius:999px;
+  border:1px solid rgba(255,255,255,.3);background:linear-gradient(160deg,rgba(255,255,255,.16),rgba(255,255,255,.05));
+  font-size:1.05rem;font-weight:400;letter-spacing:.01em;transition:transform .3s ease,background .3s ease;
+}
+.enter em{font-style:normal;color:var(--thread);text-shadow:0 0 14px rgba(255,77,109,.8);animation:beat 1.8s ease-in-out infinite}
+.enter::before,.enter::after{content:'';position:absolute;inset:-1px;border-radius:inherit;border:1px solid rgba(255,159,182,.55);animation:ripple 2.6s ease-out infinite}
+.enter::after{animation-delay:1.3s}
+@keyframes ripple{from{transform:scale(1);opacity:.8}to{transform:scale(1.55,1.9);opacity:0}}
+.enter:hover{transform:translateY(-2px)}
+
+/* ---------- Лайтбокс ---------- */
+#lightbox{position:fixed;inset:0;z-index:60;background:rgba(8,4,16,.94);display:none;align-items:center;justify-content:center;padding:1rem;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-width:100%;max-height:90vh;border-radius:18px;box-shadow:0 20px 70px #000}
+#lightbox .ph{font-size:5rem;color:rgba(255,255,255,.5)}
+
+/* ---------- Спокойный режим («уменьшить движение»): обычная лента без тоннеля ---------- */
+.flat #fx,.flat #vignette,.flat #progress{display:none}
+.flat #stage{position:relative;perspective:none;overflow:visible;pointer-events:auto}
+.flat #world{position:relative;transform:none!important;padding:8vh 0 14vh}
+.flat .scene{position:relative;left:auto;top:auto;transform:none!important;opacity:1!important;visibility:visible!important;filter:none!important;margin:0 auto 16vh;pointer-events:auto}
+.flat #track{display:none}
+.flat .heart-btn,.flat .enter em,.flat .hint i{animation:none}
+@media (prefers-reduced-motion:reduce){
+  .heart-btn,.enter em,.enter::before,.enter::after,.hint i,.paper .caret{animation:none}
+  #intro{transition-duration:.01s}
+}
